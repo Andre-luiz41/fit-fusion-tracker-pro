@@ -1,15 +1,17 @@
-
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { WorkoutPlanCard } from "@/components/workouts/WorkoutPlanCard";
 import { Button } from "@/components/ui/button";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Video, ClipboardCheck } from "lucide-react";
+import { ArrowLeft, Video, ClipboardCheck, Calendar, Clock } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export default function WorkoutDetail() {
   const { workoutType } = useParams();
   const navigate = useNavigate();
+  const [currentDate, setCurrentDate] = useState(new Date());
   
-  // Workout data based on the images provided
   const workoutPlans = {
     "treino-a": {
       type: "Treino 1A",
@@ -61,7 +63,7 @@ export default function WorkoutDetail() {
         { id: 2, name: "Remada baixa com barra triângulo", sets: "3x DROPSET", reps: "", description: "Comece a série com uma carga elevada, faça o máximo de repetições (de 6 a 10), sem descanso pegue uma carga mais leve e faça o máximo de repetições, sem descanso pegue uma carga mais leve e faça o último set até a falha (utilhe-se, onde 3 séries são sem descanso) repita x 3 drop set." },
         { id: 3, name: "Remada unilateral", sets: "3x10", reps: "", description: "3x 10 (com pico de contração). A cada remada segure 2 segundos em cima." },
         { id: 4, name: "Tríceps na polia com barra reta", sets: "3x12", reps: "", description: "" },
-        { id: 5, name: "Tríceps testa com halteres x Tríceps francês com halter", sets: "3x10/10", reps: "", description: "Faça o tríceps testa, em seguida (sem descanso) faça o tríceps francês com halter." },
+        { id: 5, name: "Tríceps testa com halteres x Tríceps francês com halter", sets: "3x10/10", reps: "", description: "Faça o tríceps testa, em seguida (sem descanso) faça o tríceps franc��s com halter." },
         { id: 6, name: "Tríceps na polia com corda", sets: "1x20/1x15/1x10/1x6", reps: "", description: "Série de progressão de carga, inicie a primeira série com uma carga leve (tipo 20 repetições), nas próximas séries vá aumentando a carga e reduzindo as repetições, até chegar na quarta série de 6 repetições, com uma carga bem elevada, mas sem perder a qualidade do movimento." },
         { id: 7, name: "Abdominal infra com as pernas flexionadas", sets: "3x15", reps: "", description: "" },
         { id: 8, name: "Abdominal supra no banco declinado", sets: "3x15", reps: "", description: "" }
@@ -71,6 +73,19 @@ export default function WorkoutDetail() {
   
   const workoutKey = workoutType as keyof typeof workoutPlans;
   const workout = workoutPlans[workoutKey];
+  
+  const [completedExercises, setCompletedExercises] = useState<number[]>([]);
+  
+  const handleExerciseComplete = (exerciseId: number, completed: boolean) => {
+    if (completed) {
+      setCompletedExercises(prev => [...prev, exerciseId]);
+    } else {
+      setCompletedExercises(prev => prev.filter(id => id !== exerciseId));
+    }
+  };
+  
+  const formattedDate = format(currentDate, "EEEE, dd 'de' MMMM", { locale: ptBR });
+  const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   
   if (!workout) {
     return (
@@ -101,16 +116,24 @@ export default function WorkoutDetail() {
               Voltar
             </Button>
             <h1 className="text-3xl font-bold tracking-tight">{workout.type}: {workout.title}</h1>
-            <p className="text-muted-foreground">
-              {workout.description}
-            </p>
+            <div className="flex items-center text-muted-foreground mt-1">
+              <Calendar className="mr-2 h-4 w-4" />
+              <span>{capitalizedDate}</span>
+              <Clock className="ml-4 mr-2 h-4 w-4" />
+              <span>Duração estimada: 60 min</span>
+            </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button 
+              variant="outline" 
+              className={completedExercises.length === workout.exercises.length ? "bg-green-800/20 text-green-400 hover:text-green-300" : ""}
+            >
               <ClipboardCheck className="mr-2 h-4 w-4" />
-              Marcar como concluído
+              {completedExercises.length > 0 
+                ? `${completedExercises.length}/${workout.exercises.length} concluídos` 
+                : "Marcar como concluído"}
             </Button>
-            <Button>
+            <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
               <Video className="mr-2 h-4 w-4" />
               Enviar vídeo
             </Button>
@@ -123,6 +146,7 @@ export default function WorkoutDetail() {
             title={workout.title}
             description={workout.description}
             exercises={workout.exercises}
+            onExerciseComplete={handleExerciseComplete}
           />
         </div>
       </div>

@@ -19,7 +19,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div className="flex flex-col flex-1 overflow-hidden">
         <TopBar setSidebarOpen={setSidebarOpen} />
         
-        <main className="flex-1 overflow-y-auto pb-10 px-4 md:px-6 bg-background">
+        <main className="flex-1 overflow-y-auto pb-10 px-4 md:px-6 bg-[#121212] text-white">
           <div className="mx-auto max-w-6xl">
             {children}
           </div>
