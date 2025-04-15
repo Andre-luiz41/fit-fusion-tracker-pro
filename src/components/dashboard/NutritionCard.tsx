@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Utensils } from "lucide-react";
+import { AddMealDialog } from "../nutrition/AddMealDialog";
 
 interface Meal {
   time: string;
@@ -31,6 +32,11 @@ export function NutritionCard({
   
   // Capitalize first letter
   const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
+  const handleSaveMeal = (items: any[]) => {
+    // In a real app, this would update the state or call an API
+    console.log('Meal items saved:', items);
+  };
   
   return (
     <Card>
@@ -64,9 +70,7 @@ export function NutritionCard({
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" size="sm">
-          Registrar refeição
-        </Button>
+        <AddMealDialog mealType="Refeição" onSave={handleSaveMeal} />
         <Button variant="outline" size="sm" className="flex items-center">
           <BarChart className="h-4 w-4 mr-1" />
           Ver análise

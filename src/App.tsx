@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Workouts from "./pages/Workouts";
 import Nutrition from "./pages/Nutrition"; 
 import Videos from "./pages/Videos";
+import WorkoutDetail from "./pages/WorkoutDetail";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/workouts" element={<Workouts />} />
+          <Route path="/workouts/:workoutType" element={<WorkoutDetail />} />
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/videos" element={<Videos />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

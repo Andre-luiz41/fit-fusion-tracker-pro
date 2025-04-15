@@ -13,13 +13,13 @@ export function MainLayout({ children }: MainLayoutProps) {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen bg-black overflow-hidden">
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       
       <div className="flex flex-col flex-1 overflow-hidden">
         <TopBar setSidebarOpen={setSidebarOpen} />
         
-        <main className="flex-1 overflow-y-auto pb-10 px-4 md:px-6">
+        <main className="flex-1 overflow-y-auto pb-10 px-4 md:px-6 bg-background">
           <div className="mx-auto max-w-6xl">
             {children}
           </div>
