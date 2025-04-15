@@ -2,28 +2,17 @@
 import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Calendar, BarChart3 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { 
-  Plus, 
-  Search, 
-  Utensils, 
-  Apple, 
-  Beef, 
-  Egg, 
-  Fish, 
-  Milk, 
-  BarChart3, 
-  Calendar, 
-  Pizza,
-  FilterX
-} from "lucide-react";
+import { NutritionSummaryCard } from "@/components/nutrition/NutritionSummaryCard";
+import { DailyMealPlan } from "@/components/nutrition/DailyMealPlan";
+import { FoodSearchTab } from "@/components/nutrition/FoodSearchTab";
+import { SavedMealsTab } from "@/components/nutrition/SavedMealsTab";
+import { SupplementationCard } from "@/components/nutrition/SupplementationCard";
+import { UnplannedMealCard } from "@/components/nutrition/UnplannedMealCard";
 
-// Tipos de dados
-interface FoodItem {
+// Types
+export interface FoodItem {
   id: number;
   name: string;
   category: string;
@@ -34,14 +23,14 @@ interface FoodItem {
   serving: string;
 }
 
-interface Meal {
+export interface Meal {
   id: number;
   time: string;
   name: string;
   foods: FoodItem[];
 }
 
-interface DailyNutrition {
+export interface DailyNutrition {
   date: string;
   calorieGoal: number;
   proteinGoal: number;
@@ -51,7 +40,7 @@ interface DailyNutrition {
 }
 
 export default function Nutrition() {
-  // Dados de exemplo
+  // Sample data - in a real app this would come from a database or API
   const foodDatabase: FoodItem[] = [
     { id: 1, name: "Peito de frango grelhado", category: "Proteínas", calories: 165, protein: 31, carbs: 0, fat: 3.6, serving: "100g" },
     { id: 2, name: "Arroz branco cozido", category: "Carboidratos", calories: 130, protein: 2.7, carbs: 28, fat: 0.3, serving: "100g" },
@@ -125,10 +114,9 @@ export default function Nutrition() {
     ]
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedFoods, setSelectedFoods] = useState<FoodItem[]>([]);
   
-  // Cálculo dos totais nutricionais
+  // Calculate totals
   const calculateTotals = () => {
     let calories = 0;
     let protein = 0;
@@ -148,26 +136,6 @@ export default function Nutrition() {
   };
   
   const totals = calculateTotals();
-  
-  const filteredFoods = searchQuery 
-    ? foodDatabase.filter(food => 
-        food.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
-  
-  const icons = {
-    "Proteínas": Beef,
-    "Carboidratos": Apple,
-    "Gorduras": Fish,
-    "Frutas": Apple,
-    "Laticínios": Milk,
-    "Suplementos": Egg,
-  };
-  
-  const getFoodIcon = (category: string) => {
-    const IconComponent = icons[category as keyof typeof icons] || Utensils;
-    return <IconComponent className="h-4 w-4" />;
-  };
   
   return (
     <MainLayout>
@@ -201,346 +169,37 @@ export default function Nutrition() {
               </TabsList>
               
               <TabsContent value="daily" className="m-0 space-y-4">
-                {nutritionPlan.meals.map((meal) => (
-                  <Card key={meal.id}>
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <CardTitle className="text-base font-medium">{meal.name}</CardTitle>
-                          <CardDescription>{meal.time}</CardDescription>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          <Plus className="h-4 w-4 mr-1" />
-                          Adicionar
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        {meal.foods.map((food) => (
-                          <div key={food.id} className="flex justify-between items-center py-2">
-                            <div className="flex items-center">
-                              <div className="h-8 w-8 rounded-full bg-fitness-primary/10 flex items-center justify-center mr-3">
-                                {getFoodIcon(food.category)}
-                              </div>
-                              <div>
-                                <p className="font-medium text-sm">{food.name}</p>
-                                <p className="text-xs text-muted-foreground">{food.serving}</p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-medium text-sm">{food.calories} kcal</p>
-                              <p className="text-xs text-muted-foreground">
-                                P: {food.protein}g • C: {food.carbs}g • G: {food.fat}g
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      <div className="mt-4 pt-4 border-t">
-                        <div className="flex justify-between text-sm font-medium">
-                          <span>Total da refeição:</span>
-                          <span>
-                            {meal.foods.reduce((acc, food) => acc + food.calories, 0)} kcal
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-                
-                <div className="flex justify-center mt-4">
-                  <Button>
-                    <Plus className="h-4 w-4 mr-1" />
-                    Adicionar Refeição
-                  </Button>
-                </div>
+                <DailyMealPlan meals={nutritionPlan.meals} />
               </TabsContent>
               
               <TabsContent value="add" className="m-0 space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Adicionar Alimento</CardTitle>
-                    <CardDescription>Pesquise ou cadastre um novo alimento</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="relative">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          type="search"
-                          placeholder="Pesquisar alimento..."
-                          className="pl-8"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                      </div>
-                      
-                      {searchQuery && (
-                        <div className="border rounded-md divide-y max-h-80 overflow-y-auto">
-                          {filteredFoods.length > 0 ? (
-                            filteredFoods.map((food) => (
-                              <div 
-                                key={food.id} 
-                                className="flex justify-between items-center p-3 hover:bg-muted/50 cursor-pointer"
-                                onClick={() => setSelectedFoods([...selectedFoods, food])}
-                              >
-                                <div className="flex items-center">
-                                  <div className="h-8 w-8 rounded-full bg-fitness-primary/10 flex items-center justify-center mr-3">
-                                    {getFoodIcon(food.category)}
-                                  </div>
-                                  <div>
-                                    <p className="font-medium text-sm">{food.name}</p>
-                                    <p className="text-xs text-muted-foreground">{food.serving}</p>
-                                  </div>
-                                </div>
-                                <div className="text-right">
-                                  <p className="font-medium text-sm">{food.calories} kcal</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    P: {food.protein}g • C: {food.carbs}g • G: {food.fat}g
-                                  </p>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <div className="p-4 text-center">
-                              <p className="text-muted-foreground">Nenhum alimento encontrado.</p>
-                              <Button variant="link" className="mt-2">
-                                <Plus className="h-4 w-4 mr-1" />
-                                Cadastrar novo alimento
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      
-                      {selectedFoods.length > 0 && (
-                        <div className="mt-6">
-                          <div className="flex justify-between items-center mb-2">
-                            <h3 className="font-medium">Alimentos Selecionados</h3>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => setSelectedFoods([])}
-                            >
-                              <FilterX className="h-4 w-4 mr-1" />
-                              Limpar
-                            </Button>
-                          </div>
-                          
-                          <div className="border rounded-md divide-y">
-                            {selectedFoods.map((food, idx) => (
-                              <div key={idx} className="flex justify-between items-center p-3">
-                                <div className="flex items-center">
-                                  <div className="h-8 w-8 rounded-full bg-fitness-primary/10 flex items-center justify-center mr-3">
-                                    {getFoodIcon(food.category)}
-                                  </div>
-                                  <div>
-                                    <p className="font-medium text-sm">{food.name}</p>
-                                    <p className="text-xs text-muted-foreground">{food.serving}</p>
-                                  </div>
-                                </div>
-                                <div className="text-right">
-                                  <p className="font-medium text-sm">{food.calories} kcal</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    P: {food.protein}g • C: {food.carbs}g • G: {food.fat}g
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          <div className="mt-4 flex justify-between">
-                            <div>
-                              <p className="text-sm font-medium">Total: {selectedFoods.reduce((acc, food) => acc + food.calories, 0)} kcal</p>
-                              <p className="text-xs text-muted-foreground">
-                                P: {selectedFoods.reduce((acc, food) => acc + food.protein, 0)}g • 
-                                C: {selectedFoods.reduce((acc, food) => acc + food.carbs, 0)}g • 
-                                G: {selectedFoods.reduce((acc, food) => acc + food.fat, 0)}g
-                              </p>
-                            </div>
-                            
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm">Salvar Refeição</Button>
-                              <Button size="sm">Adicionar ao Plano</Button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                <FoodSearchTab 
+                  foodDatabase={foodDatabase}
+                  selectedFoods={selectedFoods}
+                  setSelectedFoods={setSelectedFoods}
+                />
               </TabsContent>
               
               <TabsContent value="custom" className="m-0">
-                <div className="flex items-center justify-center h-40 border rounded-lg bg-muted/10">
-                  <p className="text-muted-foreground">Salve suas refeições favoritas para adicioná-las rapidamente ao seu plano</p>
-                </div>
+                <SavedMealsTab />
               </TabsContent>
             </Tabs>
           </div>
           
           <div className="space-y-6">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-medium">Resumo Nutricional</CardTitle>
-                <CardDescription>Progresso diário</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <Label>Calorias</Label>
-                    <span className="text-sm text-muted-foreground">
-                      {totals.calories} / {nutritionPlan.calorieGoal} kcal
-                    </span>
-                  </div>
-                  <Progress 
-                    value={(totals.calories / nutritionPlan.calorieGoal) * 100} 
-                    className="h-2 bg-red-100"
-                  >
-                    <div 
-                      className="h-full bg-red-500 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min((totals.calories / nutritionPlan.calorieGoal) * 100, 100)}%` }}
-                    />
-                  </Progress>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <Label>Proteínas</Label>
-                    <span className="text-sm text-muted-foreground">
-                      {totals.protein} / {nutritionPlan.proteinGoal} g
-                    </span>
-                  </div>
-                  <Progress 
-                    value={(totals.protein / nutritionPlan.proteinGoal) * 100} 
-                    className="h-2 bg-blue-100"
-                  >
-                    <div 
-                      className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min((totals.protein / nutritionPlan.proteinGoal) * 100, 100)}%` }}
-                    />
-                  </Progress>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <Label>Carboidratos</Label>
-                    <span className="text-sm text-muted-foreground">
-                      {totals.carbs} / {nutritionPlan.carbsGoal} g
-                    </span>
-                  </div>
-                  <Progress 
-                    value={(totals.carbs / nutritionPlan.carbsGoal) * 100} 
-                    className="h-2 bg-yellow-100"
-                  >
-                    <div 
-                      className="h-full bg-yellow-500 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min((totals.carbs / nutritionPlan.carbsGoal) * 100, 100)}%` }}
-                    />
-                  </Progress>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <Label>Gorduras</Label>
-                    <span className="text-sm text-muted-foreground">
-                      {totals.fat} / {nutritionPlan.fatGoal} g
-                    </span>
-                  </div>
-                  <Progress 
-                    value={(totals.fat / nutritionPlan.fatGoal) * 100} 
-                    className="h-2 bg-green-100"
-                  >
-                    <div 
-                      className="h-full bg-green-500 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min((totals.fat / nutritionPlan.fatGoal) * 100, 100)}%` }}
-                    />
-                  </Progress>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" size="sm" className="w-full">
-                  <BarChart3 className="h-4 w-4 mr-1" />
-                  Ver Relatório Completo
-                </Button>
-              </CardFooter>
-            </Card>
+            <NutritionSummaryCard 
+              totals={totals} 
+              goals={{
+                calories: nutritionPlan.calorieGoal,
+                protein: nutritionPlan.proteinGoal,
+                carbs: nutritionPlan.carbsGoal,
+                fat: nutritionPlan.fatGoal
+              }} 
+            />
             
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-medium">Suplementação</CardTitle>
-                <CardDescription>Recomendações diárias</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className="h-8 w-8 rounded-full bg-fitness-primary/10 flex items-center justify-center mr-3">
-                        <Egg className="h-4 w-4 text-fitness-primary" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">Whey Protein</p>
-                        <p className="text-xs text-muted-foreground">2 doses diárias</p>
-                      </div>
-                    </div>
-                    <span className="text-xs bg-fitness-primary/10 text-fitness-primary px-2 py-1 rounded-full">
-                      45g
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className="h-8 w-8 rounded-full bg-fitness-primary/10 flex items-center justify-center mr-3">
-                        <Egg className="h-4 w-4 text-fitness-primary" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">Creatina</p>
-                        <p className="text-xs text-muted-foreground">1 dose diária</p>
-                      </div>
-                    </div>
-                    <span className="text-xs bg-fitness-primary/10 text-fitness-primary px-2 py-1 rounded-full">
-                      5g
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className="h-8 w-8 rounded-full bg-fitness-primary/10 flex items-center justify-center mr-3">
-                        <Egg className="h-4 w-4 text-fitness-primary" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">BCAA</p>
-                        <p className="text-xs text-muted-foreground">Durante treino</p>
-                      </div>
-                    </div>
-                    <span className="text-xs bg-fitness-primary/10 text-fitness-primary px-2 py-1 rounded-full">
-                      10g
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" size="sm" className="w-full">
-                  <Plus className="h-4 w-4 mr-1" />
-                  Gerenciar Suplementos
-                </Button>
-              </CardFooter>
-            </Card>
+            <SupplementationCard />
             
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-medium">Adicionar Refeição Fora do Plano</CardTitle>
-                <CardDescription>Fast-food ou refeições não planejadas</CardDescription>
-              </CardHeader>
-              <CardContent className="flex justify-center py-6">
-                <Button className="w-full">
-                  <Pizza className="h-4 w-4 mr-2" />
-                  Registrar Refeição Não Planejada
-                </Button>
-              </CardContent>
-            </Card>
+            <UnplannedMealCard />
           </div>
         </div>
       </div>
