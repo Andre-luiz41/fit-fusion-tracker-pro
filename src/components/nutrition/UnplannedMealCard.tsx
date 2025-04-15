@@ -2,8 +2,18 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pizza } from "lucide-react";
+import { AddMealDialog } from "./AddMealDialog";
+import { toast } from "sonner";
 
 export function UnplannedMealCard() {
+  const handleSaveUnplannedMeal = (items: any[]) => {
+    if (items.length > 0) {
+      const totalCalories = items.reduce((sum: number, item: any) => sum + item.calories, 0);
+      toast.success(`Refeição não planejada adicionada (${totalCalories} kcal)`);
+      console.log("Unplanned meal items:", items);
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -11,10 +21,10 @@ export function UnplannedMealCard() {
         <CardDescription>Fast-food ou refeições não planejadas</CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center py-6">
-        <Button className="w-full">
-          <Pizza className="h-4 w-4 mr-2" />
-          Registrar Refeição Não Planejada
-        </Button>
+        <AddMealDialog 
+          mealType="Refeição Não Planejada" 
+          onSave={handleSaveUnplannedMeal} 
+        />
       </CardContent>
     </Card>
   );
