@@ -126,11 +126,14 @@ const Schedule = () => {
                     )
                   )
                 }}
+                components={{
+                  Day: ({ date, ...props }) => {
+                    const className = getDayClassNames(date);
+                    return <button {...props} className={`${props.className} ${className}`} />;
+                  },
+                }}
                 styles={{
-                  day_today: { backgroundColor: "#E5DEFF" },
-                  day: (date) => {
-                    return { className: getDayClassNames(date) };
-                  }
+                  day_today: { backgroundColor: "#E5DEFF" }
                 }}
               />
             </CardContent>

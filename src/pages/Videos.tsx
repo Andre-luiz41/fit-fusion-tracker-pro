@@ -54,7 +54,7 @@ const Videos = () => {
     
     // Simulate adding a new video after upload and analysis
     setTimeout(() => {
-      const newVideo = {
+      const newVideo: VideoEntry = {
         id: String(videos.length + 1),
         title: videoTitle || "New Exercise Form",
         date: new Date().toISOString().split('T')[0],
@@ -95,7 +95,7 @@ const Videos = () => {
     setIsVideoDialogOpen(true);
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: "pending" | "reviewed" | "analyzing") => {
     switch(status) {
       case "reviewed":
         return (
