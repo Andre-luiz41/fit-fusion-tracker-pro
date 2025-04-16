@@ -10,14 +10,14 @@ const Progress = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Progress Tracking</h1>
+        <h1 className="text-2xl font-bold mb-6">Acompanhamento de Progresso</h1>
         
         <Tabs defaultValue="weight">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="weight">Weight</TabsTrigger>
-            <TabsTrigger value="strength">Strength</TabsTrigger>
-            <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
-            <TabsTrigger value="hydration">Hydration</TabsTrigger>
+            <TabsTrigger value="weight">Peso</TabsTrigger>
+            <TabsTrigger value="strength">Força</TabsTrigger>
+            <TabsTrigger value="nutrition">Nutrição</TabsTrigger>
+            <TabsTrigger value="hydration">Hidratação</TabsTrigger>
           </TabsList>
           
           <TabsContent value="weight">

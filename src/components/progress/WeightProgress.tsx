@@ -10,9 +10,9 @@ const WeightProgress = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Weight Progression</CardTitle>
+        <CardTitle>Progressão de Peso</CardTitle>
         <CardDescription>
-          Your weight changes over the past 6 months
+          Suas mudanças de peso nos últimos 6 meses
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -36,7 +36,7 @@ const WeightProgress = () => {
                 stroke="#8884d8" 
                 fillOpacity={1} 
                 fill="url(#colorWeight)" 
-                name="Weight (kg)" 
+                name="Peso (kg)" 
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -44,15 +44,15 @@ const WeightProgress = () => {
         
         <div className="mt-4 grid grid-cols-3 gap-4">
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Starting Weight</p>
+            <p className="text-sm text-muted-foreground">Peso Inicial</p>
             <p className="text-2xl font-bold">78 kg</p>
           </div>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Current Weight</p>
+            <p className="text-sm text-muted-foreground">Peso Atual</p>
             <p className="text-2xl font-bold">74 kg</p>
           </div>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Total Change</p>
+            <p className="text-sm text-muted-foreground">Mudança Total</p>
             <p className="text-2xl font-bold text-green-600">-4 kg</p>
           </div>
         </div>

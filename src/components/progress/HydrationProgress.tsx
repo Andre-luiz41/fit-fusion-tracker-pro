@@ -15,9 +15,9 @@ const HydrationProgress = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Hydration Tracking</CardTitle>
+        <CardTitle>Monitoramento de Hidratação</CardTitle>
         <CardDescription>
-          Your daily water intake for the past week
+          Sua ingestão diária de água na última semana
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -29,23 +29,23 @@ const HydrationProgress = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="actual" name="Water Intake (ml)" fill="#82ca9d" />
-              <Bar dataKey="goal" name="Daily Goal (ml)" fill="#8884d8" />
+              <Bar dataKey="actual" name="Ingestão de Água (ml)" fill="#82ca9d" />
+              <Bar dataKey="goal" name="Meta Diária (ml)" fill="#8884d8" />
             </BarChart>
           </ResponsiveContainer>
         </div>
         
         <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Daily Goal</p>
+            <p className="text-sm text-muted-foreground">Meta Diária</p>
             <p className="text-2xl font-bold">{goalAmount} ml</p>
           </div>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Average Intake</p>
+            <p className="text-sm text-muted-foreground">Ingestão Média</p>
             <p className="text-2xl font-bold">{avgIntake} ml</p>
           </div>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Goal Achievement</p>
+            <p className="text-sm text-muted-foreground">Cumprimento da Meta</p>
             <p className="text-2xl font-bold">{goalPercentage}%</p>
           </div>
         </div>

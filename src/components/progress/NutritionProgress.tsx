@@ -16,9 +16,9 @@ const NutritionProgress = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nutrition Tracking</CardTitle>
+        <CardTitle>Acompanhamento Nutricional</CardTitle>
         <CardDescription>
-          Your nutrition intake for the past week
+          Sua ingestão nutricional da última semana
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -31,29 +31,29 @@ const NutritionProgress = () => {
               <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
               <Tooltip />
               <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="calories" name="Calories (kcal)" stroke="#8884d8" activeDot={{ r: 8 }} />
-              <Line yAxisId="right" type="monotone" dataKey="protein" name="Protein (g)" stroke="#82ca9d" />
-              <Line yAxisId="right" type="monotone" dataKey="carbs" name="Carbs (g)" stroke="#ffc658" />
-              <Line yAxisId="right" type="monotone" dataKey="fat" name="Fat (g)" stroke="#ff8042" />
+              <Line yAxisId="left" type="monotone" dataKey="calories" name="Calorias (kcal)" stroke="#8884d8" activeDot={{ r: 8 }} />
+              <Line yAxisId="right" type="monotone" dataKey="protein" name="Proteínas (g)" stroke="#82ca9d" />
+              <Line yAxisId="right" type="monotone" dataKey="carbs" name="Carboidratos (g)" stroke="#ffc658" />
+              <Line yAxisId="right" type="monotone" dataKey="fat" name="Gorduras (g)" stroke="#ff8042" />
             </LineChart>
           </ResponsiveContainer>
         </div>
         
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Avg. Calories</p>
+            <p className="text-sm text-muted-foreground">Média de Calorias</p>
             <p className="text-2xl font-bold">{avgCalories} kcal</p>
           </div>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Avg. Protein</p>
+            <p className="text-sm text-muted-foreground">Média de Proteínas</p>
             <p className="text-2xl font-bold">{avgProtein}g</p>
           </div>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Avg. Carbs</p>
+            <p className="text-sm text-muted-foreground">Média de Carboidratos</p>
             <p className="text-2xl font-bold">{avgCarbs}g</p>
           </div>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground">Avg. Fat</p>
+            <p className="text-sm text-muted-foreground">Média de Gorduras</p>
             <p className="text-2xl font-bold">{avgFat}g</p>
           </div>
         </div>
