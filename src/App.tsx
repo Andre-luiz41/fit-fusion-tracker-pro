@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Videos from "./pages/Videos";
 import Profile from "./pages/Profile";
 import Progress from "./pages/Progress";
+import Schedule from "./pages/Schedule";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/videos" element={<Videos />} />
+          <Route path="/schedule" element={<Schedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

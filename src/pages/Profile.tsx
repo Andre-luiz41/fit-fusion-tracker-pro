@@ -8,12 +8,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Profile = () => {
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("profile");
+  const [isRegistered, setIsRegistered] = useState(true);
   const [profileData, setProfileData] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
+    password: "",
+    confirmPassword: "",
     height: 178, // in cm
     weight: 75, // in kg
     goal: "build_muscle", 
@@ -37,6 +44,33 @@ const Profile = () => {
     }));
   };
 
+  const handleSaveChanges = () => {
+    toast({
+      title: "Profile Updated",
+      description: "Your profile has been updated successfully."
+    });
+  };
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (profileData.password !== profileData.confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // In a real app, we would send this to a backend
+    setIsRegistered(true);
+    toast({
+      title: "Registration Successful",
+      description: "Your account has been created successfully."
+    });
+  };
+
   const goalProgress = () => {
     if (profileData.goal === "lose_weight") {
       // For weight loss, calculate progress based on starting weight and target weight
@@ -53,12 +87,91 @@ const Profile = () => {
     return 50; // Default for maintenance goals
   };
 
+  if (!isRegistered) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-8">
+          <Card className="max-w-md mx-auto">
+            <CardHeader>
+              <CardTitle>Create Account</CardTitle>
+              <CardDescription>
+                Register to start tracking your fitness journey
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleRegister} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="register-name">Full Name</Label>
+                  <Input 
+                    id="register-name" 
+                    name="name" 
+                    value={profileData.name} 
+                    onChange={handleInputChange} 
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-email">Email</Label>
+                  <Input 
+                    id="register-email" 
+                    name="email" 
+                    type="email" 
+                    value={profileData.email} 
+                    onChange={handleInputChange} 
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-password">Password</Label>
+                  <Input 
+                    id="register-password" 
+                    name="password" 
+                    type="password" 
+                    value={profileData.password} 
+                    onChange={handleInputChange} 
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-confirm">Confirm Password</Label>
+                  <Input 
+                    id="register-confirm" 
+                    name="confirmPassword" 
+                    type="password" 
+                    value={profileData.confirmPassword} 
+                    onChange={handleInputChange} 
+                    required
+                  />
+                </div>
+                <Button className="w-full" type="submit">Register</Button>
+                <div className="text-center text-sm text-muted-foreground">
+                  Already have an account?{" "}
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto" 
+                    onClick={() => setIsRegistered(true)}
+                  >
+                    Log in
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Profile Summary */}
-          <div className="md:w-1/3">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-6">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="edit">Edit Profile</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="profile">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle>Profile</CardTitle>
@@ -70,7 +183,6 @@ const Profile = () => {
                     <AvatarImage src={profileData.profileImage || "https://picsum.photos/seed/user/200"} alt={profileData.name} />
                     <AvatarFallback>{profileData.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
-                  <Button variant="outline" size="sm">Change Photo</Button>
                   <h2 className="text-xl font-bold">{profileData.name}</h2>
                   <p className="text-muted-foreground">{profileData.email}</p>
                 </div>
@@ -84,9 +196,16 @@ const Profile = () => {
                           ? "Lose Weight" 
                           : profileData.goal === "build_muscle" 
                             ? "Build Muscle" 
-                            : "Maintain Weight"}
+                            : profileData.goal === "improve_fitness"
+                              ? "Improve Fitness"
+                              : "Maintain Weight"}
                       </span>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0"
+                        onClick={() => setActiveTab("edit")}
+                      >
                         <ChevronRightIcon className="h-4 w-4" />
                       </Button>
                     </div>
@@ -112,10 +231,9 @@ const Profile = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </TabsContent>
           
-          {/* Profile Edit Form */}
-          <div className="md:w-2/3">
+          <TabsContent value="edit">
             <Card>
               <CardHeader>
                 <CardTitle>Edit Profile</CardTitle>
@@ -194,12 +312,19 @@ const Profile = () => {
                     </div>
                   </div>
                   
-                  <Button className="w-full md:w-auto" type="button">Save Changes</Button>
+                  <Button 
+                    className="w-full md:w-auto" 
+                    type="button" 
+                    onClick={handleSaveChanges}
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </Button>
                 </form>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </Layout>
   );
